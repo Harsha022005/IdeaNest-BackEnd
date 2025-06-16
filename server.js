@@ -10,9 +10,10 @@ const app = express();
 // Enable CORS and JSON parsing
 app.use(cors());
 app.use(express.json());
+// app.use()
 
 // Mount auth routes
-app.use('/api', authRoutes);
+app.use('/', authRoutes);
 
 connectDB();
 
