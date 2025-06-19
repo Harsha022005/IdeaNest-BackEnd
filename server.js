@@ -37,7 +37,7 @@ app.get(process.env.callbackURL,
 
 app.use('/', authRoutes);
 app.use('/userpost',userpost);
-app.use('/',fetchposts)
+app.use('/api/posts',fetchposts)
 
 
 connectDB();
