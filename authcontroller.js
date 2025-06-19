@@ -1,4 +1,4 @@
-import User from "./user.js";
+import User from "./models/user.js";
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
@@ -44,7 +44,6 @@ export const login = async (req, res) => {
             return res.status(400).json({ message: 'Incorrect password' });
         }
 
-        // Verify role matches
         if (role && existingUser.role !== role) {
             return res.status(400).json({ message: 'Selected role does not match user role' });
         }
@@ -52,7 +51,7 @@ export const login = async (req, res) => {
         const token = jwt.sign(
             { email: existingUser.email, role: existingUser.role },
             process.env.JWT_SECRET,
-            { expiresIn: '10s' }
+            { expiresIn: '1d' }
         );
 
         return res.status(200).json({ message: 'Login successful', token, role: existingUser.role });

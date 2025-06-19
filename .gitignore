@@ -7,7 +7,6 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-<<<<<<< HEAD
 node_modules
 dist
 dist-ssr
@@ -17,37 +16,10 @@ dist-ssr
 .vscode/*
 !.vscode/extensions.json
 .idea
-=======
-# Node packages and lock files
-node_modules/
-package-lock.json
-package.json  # ⚠️ Optional — ignore only if you're not sharing the project config (usually you should NOT ignore this)
-
-# Build output
-dist/
-dist-ssr/
-
-# Environment
-*.local
-
-# Config files you want to ignore
-eslint.config.js
-vite.config.js
-
-# Editor directories and files
-.vscode/
-!.vscode/extensions.json  # include this specific file
-.idea/
->>>>>>> d95cc2a (initial commit)
 .DS_Store
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
+.env
 *.sw?
-<<<<<<< HEAD
-=======
-
-# Optional: ignore test coverage
-coverage/
->>>>>>> d95cc2a (initial commit)
