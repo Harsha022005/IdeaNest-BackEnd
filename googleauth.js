@@ -1,26 +1,62 @@
-import passport from "passport";
-import { Strategy } from "passport-google-oauth20";
+import express from 'express';
+import { OAuth2Client } from 'google-auth-library';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
-
+import User from './models/user.js'; 
 dotenv.config();
 
-passport.use('Google',new Strategy({
-    clientID:process.env.GOOGLE_CLIENT_ID,
-    clientSecret:process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL:process.env.callbackURL},(accesstoken,refrshtoken,profile,cb)=>{
-        const user={
-            name:profile.displayname,
-            email:profile.emails[0].value,
-            googleid:profile.id
-        }
-        const token = jwt.sign(user,process.env.JWT_SECRET, {expiresIn: '1d'});
-        return cb(null,{user,token});
+const router = express.Router();
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
-    }))
-    passport.serializeUser((user,cb)=>{
-        cb(null,user);
-    })
-    passport.deserializeUser((user,cb)=>{
-        cb(null,user);
-    })
+router.post('', async (req, res) => {
+  try {
+    const { credential } = req.body;
+    if (!credential) {
+      return res.status(400).json({ message: 'No credential provided' });
+    }
+
+    // Verify Google token
+    const ticket = await client.verifyIdToken({
+      idToken: credential,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+
+    const payload = ticket.getPayload();
+
+    // Extract user info
+    const email = payload.email;
+    const name = payload.name;
+
+    // Find or create user in DB
+    let user = await User.findOne({ email });
+    if (!user) {
+      user = new User({
+        name,
+        email,
+        password: '', 
+        role: 'user'
+      });
+      await user.save();
+    }
+
+    // Generate JWT
+    const token = jwt.sign(
+      { email: user.email, role: user.role },
+      process.env.JWT_SECRET,
+      { expiresIn: '1d' }
+    );
+
+    res.json({
+      token,
+      email: user.email,
+      name: user.name,
+      role: user.role
+    });
+
+  } catch (err) {
+    console.error('Google login error:', err);
+    res.status(500).json({ message: 'Google login failed' });
+  }
+});
+
+export default router;

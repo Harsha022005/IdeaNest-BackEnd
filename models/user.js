@@ -8,7 +8,8 @@ const userSchema = new mongoose.Schema({
         type: String,
         enum: ['user', 'admin'],
         default: 'user'
-    }
+    },
+    bookmarks:[{type:mongoose.Schema.ObjectId , ref:'Post'}]  //We refer my user_id schemma model to the post_id 
 }, { timestamps: true });
 
-export default mongoose.model('User', userSchema);
+export default mongoose.models.User || mongoose.model('User', userSchema);

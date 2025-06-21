@@ -1,18 +1,23 @@
 import express from 'express';
-import mongoose from 'mongoose';
-import Post from './models/UserpostsModel.js'
+import Post from './models/UserpostsModel.js';
+
 const router = express.Router();
 
 router.post('/', async (req, res) => {
-    const { title, description, image, tags } = req.body;
-    try {
-        const newPost = new Post({ title, description, image, tags });
-        await newPost.save();
-        res.status(201).json({ message: 'Post created successfully', post: newPost });
-    } catch (err) {
-        console.error('Error creating post:', err.message);
-        res.status(500).json({ message: 'Failed to create post', error: err.message });
-    }
+  const { title, description, image, tags, email } = req.body; 
+
+  if (!title || !description || !tags || !email) {
+    return res.status(400).json({ message: 'Missing required fields' });
+  }
+
+  try {
+    const newPost = new Post({ title, description, image, tags, email }); 
+    await newPost.save();
+    res.status(201).json({ message: 'Post created successfully', post: newPost });
+  } catch (err) {
+    console.error('Error creating post:', err.message);
+    res.status(500).json({ message: 'Failed to create post', error: err.message });
+  }
 });
 
 export default router;
