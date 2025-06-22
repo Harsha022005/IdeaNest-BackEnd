@@ -25,9 +25,7 @@ router.post('/add', async (req, res) => {
   }
 });
 
-router.post('/delete',async(req,res)=>{
-  
-})
+
 // remove bookmarks
 
 router.post('/remove', async (req, res) => {
