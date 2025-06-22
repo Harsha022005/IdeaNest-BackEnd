@@ -23,7 +23,8 @@ import Chatroutes from './Routes/chatinbox.js';
 dotenv.config();
 const app = express();
 
-app.use(cors());
+app.use(cors({ origin: 'http://localhost:5173', credentials: true }));
+
 app.use(express.json());
 
 app.use(session({
@@ -36,16 +37,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // Google Auth
-app.use('/api/auth/google',googleauth)
-
-app.get(process.env.callbackURL,
-    passport.authenticate('Google', { failureRedirect: '/login' }),
-    (req, res) => {
-        res.redirect(`${process.env.FRONTEND_URL}/userexplore`);
-    }
-);
-
-app.get('/api/auth/google', passport.authenticate('Google', { scope: ['profile', 'email'] }));
+app.use('/api/auth/google', googleauth);
 
 // Routes
 app.use('/', authRoutes);

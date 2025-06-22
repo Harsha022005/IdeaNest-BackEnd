@@ -2,13 +2,14 @@ import express from 'express';
 import { OAuth2Client } from 'google-auth-library';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
-import User from './models/user.js'; 
+import User from './models/user.js';
+
 dotenv.config();
 
 const router = express.Router();
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
-router.post('', async (req, res) => {
+router.post('/', async (req, res) => {
   try {
     const { credential } = req.body;
     if (!credential) {
@@ -22,28 +23,20 @@ router.post('', async (req, res) => {
     });
 
     const payload = ticket.getPayload();
-
-    // Extract user info
     const email = payload.email;
     const name = payload.name;
 
-    // Find or create user in DB
     let user = await User.findOne({ email });
     if (!user) {
-      user = new User({
-        name,
-        email,
-        password: '', 
-        role: 'user'
-      });
+      user = new User({ name, email, password: '', role: 'user' });
       await user.save();
     }
 
-    // Generate JWT
+    // Issue token with 1-day expiration
     const token = jwt.sign(
       { email: user.email, role: user.role },
       process.env.JWT_SECRET,
-      { expiresIn: '1d' }
+      { expiresIn: '1h' }
     );
 
     res.json({
