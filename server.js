@@ -23,8 +23,10 @@ import Chatroutes from './Routes/chatinbox.js';
 dotenv.config();
 const app = express();
 
-app.use(cors({ origin: process.env.FRONTEND_URL, credentials: true }));
-app.use(express.json());
+app.use(cors({
+  origin: ['http://localhost:5173', 'https://idea-nest-frontend.vercel.app','https://idea-nest-frontend-hho4.vercel.app'],
+  credentials: true,
+}));app.use(express.json());
 
 app.use(session({
     secret: 'secret',
