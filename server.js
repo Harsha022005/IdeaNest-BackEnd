@@ -24,10 +24,15 @@ dotenv.config();
 const app = express();
 
 app.use(cors({
-  origin: ['http://localhost:5173', 'https://idea-nest-frontend.vercel.app','https://idea-nest-frontend-hho4.vercel.app'],
+  origin: [
+    'http://localhost:5173',
+    'https://idea-nest-frontend.vercel.app',
+    'https://idea-nest-frontend-hho4.vercel.app',
+    'https://idea-nest-frontend-hho4-git-main-harsha022005s-projects.vercel.app'
+   
+  ],
   credentials: true,
-}));app.use(express.json());
-
+}));
 app.use(session({
     secret: 'secret',
     resave: false,
