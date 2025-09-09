@@ -15,7 +15,6 @@ router.post('/', async (req, res) => {
     if (!credential) {
       return res.status(400).json({ message: 'No credential provided' });
     }
-
     // Verify Google token
     const ticket = await client.verifyIdToken({
       idToken: credential,
@@ -28,7 +27,7 @@ router.post('/', async (req, res) => {
 
     let user = await User.findOne({ email });
     if (!user) {
-      user = new User({ name, email, password: '', role: 'user' });
+      user = new User({ name, email, password: 'google_login123', role: 'user' });
       await user.save();
     }
 
